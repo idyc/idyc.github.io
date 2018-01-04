@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="Make Blog Great Again">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Weblog
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Weblog</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link active">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link mobile-active">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <main class="app-body">
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/11/20/frontend-architecture/">前端应用状态管理和数据流控制</a>
+      </h2>
+      <p class="article-date">November 20, 2017</p>
+      
+        
+  <a href="/tags#Redux" >
+    <span class="tag-code">Redux</span>
+  </a>
+
+  <a href="/tags#MobX" >
+    <span class="tag-code">MobX</span>
+  </a>
+
+  <a href="/tags#Vuex" >
+    <span class="tag-code">Vuex</span>
+  </a>
+
+  <a href="/tags#TFRP" >
+    <span class="tag-code">TFRP</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          谈到架构，很多人第一想到的是MVC，在1978年和Smalltalk一起被发明后，至今仍影响着各种应用的架构设计。在传统的MVC架构中，应用状态只存于数据库中：View层需要提出请求来改变应用的状态，Controller层负责获取或改变应用状态，Model是应用状态唯一该在的地方。
+1234 ...
+        
+      </div>
+      <a class="more" href="/2017/11/20/frontend-architecture/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/10/10/concurrent-programming-model/">并发编程的非阻塞模型</a>
+      </h2>
+      <p class="article-date">October 10, 2017</p>
+      
+        
+  <a href="/tags#Concurrent programming" >
+    <span class="tag-code">Concurrent programming</span>
+  </a>
+
+  <a href="/tags#Event loop" >
+    <span class="tag-code">Event loop</span>
+  </a>
+
+  <a href="/tags#Communicating sequential processes" >
+    <span class="tag-code">Communicating sequential processes</span>
+  </a>
+
+  <a href="/tags#Actor" >
+    <span class="tag-code">Actor</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          Event loop并发编程中有多种并发模型，比如Java和很多C-like语言中的线程与锁，Go的CSP，JS和很多支持事件驱动的平台则是Event loop。Android中的Looper，iOS的RunLoop都是与之类似的机制。在Win32中，与Android等平台把Looper作为 ...
+        
+      </div>
+      <a class="more" href="/2017/10/10/concurrent-programming-model/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/09/01/asynchronous-in-javascript/">Javascript异步编程的几种解决方案</a>
+      </h2>
+      <p class="article-date">September 1, 2017</p>
+      
+        
+  <a href="/tags#Promise" >
+    <span class="tag-code">Promise</span>
+  </a>
+
+  <a href="/tags#Generator" >
+    <span class="tag-code">Generator</span>
+  </a>
+
+  <a href="/tags#Async/Await" >
+    <span class="tag-code">Async/Await</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          Future and PromiseJS利用Callback解决异步问题的时候，同时带来了回调地狱的问题，这使得代码的可读性和异常处理变得复杂。为了解决这些问题，ES2015引入了Promise的概念：
+
+A future or promise can be thought of as a  ...
+        
+      </div>
+      <a class="more" href="/2017/09/01/asynchronous-in-javascript/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/07/06/design-pattern/">设计模式的透明化：Akarin’s Perspective</a>
+      </h2>
+      <p class="article-date">July 6, 2017</p>
+      
+        
+  <a href="/tags#Functional programming" >
+    <span class="tag-code">Functional programming</span>
+  </a>
+
+  <a href="/tags#Design pattern/principle" >
+    <span class="tag-code">Design pattern/principle</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          设计模式是对软件工程中普遍存在，反复出现的问题提出的可复用式的解决方案。这个术语最早在70年代末的建筑设计领域出现，但是却意外的在软件开发领域迅速流行。起因便是GoF（Erich Gamma等4人）编著的《设计模式》一书，共总结了23种设计模式，相应的还有6个设计原则。我们经常能听到关于企业 ...
+        
+      </div>
+      <a class="more" href="/2017/07/06/design-pattern/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/05/10/concrete-monad/">函数编程基础理论： Concrete Monad</a>
+      </h2>
+      <p class="article-date">May 10, 2017</p>
+      
+        
+  <a href="/tags#FRP" >
+    <span class="tag-code">FRP</span>
+  </a>
+
+  <a href="/tags#Monad" >
+    <span class="tag-code">Monad</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          
+Monad就是自函子范畴上的一个幺半群，有什么问题？- Philip Wadler
+
+
+
+&emsp;&emsp;Monad是函数式编程中一个重要的基础概念，也是学习函数式编程一个较高的门槛。网上的资料虽然很多，但是比较严谨的解释会牵扯到范畴论，对于非数学专业很不友好。所以接下来将用更加具 ...
+        
+      </div>
+      <a class="more" href="/2017/05/10/concrete-monad/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/03/16/react-native-vs-weex/">React-Native vs Weex</a>
+      </h2>
+      <p class="article-date">March 16, 2017</p>
+      
+        
+  <a href="/tags#React-Native" >
+    <span class="tag-code">React-Native</span>
+  </a>
+
+  <a href="/tags#Weex" >
+    <span class="tag-code">Weex</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          其实在很早前就准备写一点RN和Weex的对比作为参考。当时Weex还在为支持vue做准备，所以就放置了。在关注了一段时间后，感觉可以做一点简单的比较了。
+PlaygroundRN开发早期的快速预览是在rnplay.org，如今已经下线了，而Weex官方则提供了一个Playground的手机应 ...
+        
+      </div>
+      <a class="more" href="/2017/03/16/react-native-vs-weex/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/02/21/curve-surface-plotting/">腿部曲线学：Elephant's Leg</a>
+      </h2>
+      <p class="article-date">February 21, 2017</p>
+      
+        
+  <a href="/tags#Canvas" >
+    <span class="tag-code">Canvas</span>
+  </a>
+
+  <a href="/tags#Bezier curve" >
+    <span class="tag-code">Bezier curve</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          
+With four parameters I can fit her leg, and with five I can make her wiggle hers skirt.- John von Neumann
+
+
+
+事情的起因是这样的：2ch上有个人宣称发现了完美小腿曲线的方程：y=1/ ...
+        
+      </div>
+      <a class="more" href="/2017/02/21/curve-surface-plotting/">Read more</a>
+    </article>
+  
+
+  
+</main>
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2018 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by yanm1ng
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="/js/script.js"></script>
+  </body>
+</html>

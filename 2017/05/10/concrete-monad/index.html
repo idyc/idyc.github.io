@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="Make Blog Great Again">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      函数编程基础理论： Concrete Monad | Weblog
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Weblog</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>函数编程基础理论： Concrete Monad</h2>
+  <p class="post-date">2017-05-10</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><blockquote>
+<p style="text-align:left;margin-left:4rem">Monad就是自函子范畴上的一个幺半群，有什么问题？</p><br><p style="text-align:right;margin-right:4rem">- Philip Wadler</p>
+
+
+</blockquote>
+<p>&emsp;&emsp;<br>Monad是函数式编程中一个重要的基础概念，也是学习函数式编程一个较高的门槛。网上的资料虽然很多，但是比较严谨的解释会牵扯到范畴论，对于非数学专业很不友好。所以接下来将用更加具体的方式：代码来帮助理解这一概念。(本文并不是另一篇Monad科普文，只是一点个人的粗浅理解，欢迎指正)</p>
+<h2 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h2><p>Java8引入了lambda表达式和函数式接口，是一次非常重要的改进。有很多人已经开始享受到函数式带来的好处：比如Stream可以让你使用filter, map, reduce方便的处理数据，使用Optional减少null判断和空指针异常等。其中Stream类似于list monad，而Optional就是Maybe monad。</p>
+<p>判断的标准理论即Monad需要满足的三个定律：</p>
+<ol>
+<li>Left identity 存在左幺元e，使 e <code>*</code> x = x</li>
+<li>Right identity 存在右幺元e，使 x <code>*</code> e = x</li>
+<li>Associativity 结合律， (x <code>*</code> y) <code>*</code> z = x <code>*</code> (y <code>*</code> z)  </li>
+</ol>
+<p>注1：identity见过的翻译有幺元、恒元、单位元等，有同一、标识的意思。<br>注2：<code>*</code>代表一个二元运算。x, y, z是一个范畴上的态射（箭头）。</p>
+<p>在代码中，我们用Java可以做以下验证：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Optional;</span><br><span class="line"><span class="keyword">import</span> java.util.function.Function;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MonadTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> value = <span class="number">42</span>;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Optional monadicValue = Optional.of(value);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 函数f, 将n乘2，包装在Optional里</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Function&lt;Integer, Optional&lt;Integer&gt;&gt; f() &#123;</span><br><span class="line">    <span class="keyword">return</span> n -&gt; Optional.of(n * <span class="number">2</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 函数g，将n乘5，包装在Optional里</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Function&lt;Integer, Optional&lt;Integer&gt;&gt; g() &#123;</span><br><span class="line">    <span class="keyword">return</span> n -&gt; Optional.of(n * <span class="number">5</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 函数f_flatMap_g, 用flatMap合并f和g</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Function&lt;Integer, Optional&lt;Integer&gt;&gt; f_flatMap_g() &#123;</span><br><span class="line">    <span class="keyword">return</span> n -&gt; f().apply(n).flatMap(g());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 检验左幺元</span></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">satisfiesLeftIdentity</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> Optional.of(value).flatMap(f())</span><br><span class="line">          .equals(f().apply(value));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 检验右幺元</span></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">satisfiesRightIdentity</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> monadicValue.flatMap(Optional::ofNullable)</span><br><span class="line">              .equals(monadicValue);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 检验结合律</span></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">satisfiesAssociativity</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> monadicValue.flatMap(f()).flatMap(g())</span><br><span class="line">            .equals(monadicValue.flatMap(f_flatMap_g()));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 打印结果</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    System.out.println(<span class="string">"================================================="</span>);</span><br><span class="line">    System.out.println(<span class="string">"  1.  Left identity:  "</span> + satisfiesLeftIdentity());</span><br><span class="line">    System.out.println(<span class="string">"  2.  Right identity: "</span> + satisfiesRightIdentity());</span><br><span class="line">    System.out.println(<span class="string">"  3.  Associativity:  "</span> + satisfiesAssociativity());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看出上面Optional即Maybe monad有两个特点：</p>
+<ol>
+<li>identity：根据一个value构造一个Monadic Value，比如上面的value和Optional.of(value)</li>
+<li>flatMap：用Optional.of()构造后，我们可以在用flatMap做各种操作。</li>
+</ol>
+<p>Java的list用Stream.of()或.stream()构造后也可以做flatMap操作，不过Stream的identity验证并无法通过，这与Stream的实现有关。Stream本身不是一个数据结构，它没有内部存储，只是操作管道从source抓取数据。<br>而Scala中的list就是一个典型的monad，我们可以在Scala的repl里快速的验证</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 函数f, 生成一个等差数列的列表</span></span><br><span class="line"><span class="keyword">val</span> f: (<span class="type">Int</span> =&gt; <span class="type">List</span>[<span class="type">Int</span>]) = x =&gt; <span class="type">List</span>(x - <span class="number">1</span>, x, x + <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数g, 生成自己和相反数的列表</span></span><br><span class="line"><span class="keyword">val</span> g: (<span class="type">Int</span> =&gt; <span class="type">List</span>[<span class="type">Int</span>]) = x =&gt; <span class="type">List</span>(x, -x)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 验证左幺元</span></span><br><span class="line"><span class="keyword">val</span> value = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> l = <span class="type">List</span>(value).flatMap(f)</span><br><span class="line">=&gt; <span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> r = f(value)</span><br><span class="line">=&gt; <span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">l == r</span><br><span class="line">=&gt; <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 验证右幺元</span></span><br><span class="line"><span class="keyword">val</span> list = <span class="type">List</span>(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> l = list.flatMap(<span class="type">List</span>(_))</span><br><span class="line">=&gt; <span class="type">List</span>(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> r = list</span><br><span class="line">=&gt; <span class="type">List</span>(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">l == r</span><br><span class="line">=&gt; <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 验证结合律</span></span><br><span class="line"><span class="keyword">val</span> list = <span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> l = list.flatMap(f).flatMap(g)</span><br><span class="line">=&gt; <span class="type">List</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">-1</span>, <span class="number">2</span>, <span class="number">-2</span>, <span class="number">1</span>, <span class="number">-1</span>, <span class="number">2</span>, <span class="number">-2</span>, <span class="number">3</span>, <span class="number">-3</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> r = list.flatMap(x =&gt; f(x).flatMap(g))</span><br><span class="line">=&gt; <span class="type">List</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">-1</span>, <span class="number">2</span>, <span class="number">-2</span>, <span class="number">1</span>, <span class="number">-1</span>, <span class="number">2</span>, <span class="number">-2</span>, <span class="number">3</span>, <span class="number">-3</span>)</span><br><span class="line"></span><br><span class="line">l == r</span><br><span class="line">=&gt; <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>Q.E.D.</p>
+<h2 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h2><p>Python很多重要的功能借鉴了函数式语言，比如list comprehension，实际上是list monad的语法糖。有意思的是Python作者曾计划Python2到3时提出去掉map(), reduce(), filter()甚至lambda关键字。最后Guido自己也发现这技术上不可能，且比较庞大Python2社区也发出了声音。但Python3还是去掉了reduce()。lambda的使用也一直被限制。（Guido也被叫作仁慈的独裁者，由此可见一斑）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">squares</span><span class="params">(xs)</span>:</span></span><br><span class="line">    squares = [x ** <span class="number">2</span> <span class="keyword">for</span> x <span class="keyword">in</span> xs]</span><br></pre></td></tr></table></figure>
+<p>对比一下Python借鉴的对象</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- Haskell的list comprehension</span></span><br><span class="line"><span class="title">squares</span> xs = [x ^ <span class="number">2</span> | x &lt;- xs]</span><br><span class="line"></span><br><span class="line"><span class="comment">-- do写法</span></span><br><span class="line"><span class="title">squares</span> xs = <span class="keyword">do</span></span><br><span class="line">    x &lt;- xs</span><br><span class="line">    return (x ^ <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- list monad写法</span></span><br><span class="line"><span class="title">squares</span> xs = xs &gt;&gt;= \x -&gt; return (x ** <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<!-- ## Haskell
+Haskell中存在Functors, Monads, Applicatives的概念
+> ( A=>B )    => ( C[A]=>C[B] )      | Functor  
+> ( A=>C[B] ) => ( C[A]=>C[B] )   | Monad  
+> ( C[A=>B] ) => ( C[A]=>C[B] )   | Applicative  
+
+简单来说，Monad是一种Applicative，Applicative是一种Functor。 // TODO -->
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p><a href="https://en.wikipedia.org/wiki/Monad_(functional_programming" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Monad_(functional_programming</a>)<br><a href="http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html" target="_blank" rel="noopener">http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html</a><br><a href="https://www.zhihu.com/question/24972880" target="_blank" rel="noopener">https://www.zhihu.com/question/24972880</a><br><a href="http://www.jdon.com/idea/monad.html" target="_blank" rel="noopener">http://www.jdon.com/idea/monad.html</a><br><a href="http://hongjiang.info/scala/" target="_blank" rel="noopener">http://hongjiang.info/scala/</a>  </p>
+<h2 id="Further-Reading"><a href="#Further-Reading" class="headerlink" title="Further Reading"></a>Further Reading</h2><p> <a href="https://www.haskell.org/tutorial/monads.html" target="_blank" rel="noopener">A Gentle Introduction to Haskell</a><br> <a href="https://wiki.haskell.org/All_About_Monads" target="_blank" rel="noopener">All About Monads</a><br><a href="http://homepages.inf.ed.ac.uk/wadler/topics/monads.html" target="_blank" rel="noopener">Monads, Arrows, and Idioms</a></p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#FRP" >
+    <span class="tag-code">FRP</span>
+  </a>
+
+  <a href="/tags#Monad" >
+    <span class="tag-code">Monad</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <br/>
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Java"><span class="toc-nav-text"><a href="#Java" class="headerlink" title="Java"></a>Java</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Python"><span class="toc-nav-text"><a href="#Python" class="headerlink" title="Python"></a>Python</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#References"><span class="toc-nav-text"><a href="#References" class="headerlink" title="References"></a>References</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Further-Reading"><span class="toc-nav-text"><a href="#Further-Reading" class="headerlink" title="Further Reading"></a>Further Reading</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://yoursite.com/2017/05/10/concrete-monad/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+        
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "initialdyc";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "函数编程基础理论： Concrete Monad",
+        owner: "initialdyc",
+        repo: "initialdyc.github.io",
+        oauth: {
+          client_id: "",
+          client_secret: ""
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2018 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by yanm1ng
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="/js/script.js"></script>
+  </body>
+</html>

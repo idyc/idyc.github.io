@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="Make Blog Great Again">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      前端应用状态管理和数据流控制 | Weblog
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Weblog</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>前端应用状态管理和数据流控制</h2>
+  <p class="post-date">2017-11-20</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>谈到架构，很多人第一想到的是MVC，在1978年和Smalltalk一起被发明后，至今仍影响着各种应用的架构设计。<br>在传统的MVC架构中，应用状态只存于数据库中：View层需要提出请求来改变应用的状态，Controller层负责获取或改变应用状态，Model是应用状态唯一该在的地方。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">BROWSER             SERVER                    DATABASE</span><br><span class="line">|------|  request   |------------|  request   |-------|</span><br><span class="line">|      | ---------&gt; |            | ---------&gt; |       |</span><br><span class="line">| VIEW |  response  | CONTROLLER |  response  | MODEL |</span><br><span class="line">|      | &lt;--------- |            | &lt;--------- |       |</span><br><span class="line">|------|            |------------|            |-------|</span><br></pre></td></tr></table></figure>
+<p>当传统的MVC应用在前端领域时存在一个问题：当应用状态因为其他因素而发生改变时，View并不会自动更新。View总是通过Controller发起请求从Model得到数据而更新的。为了让UI对于状态改变迅速反应，从而提高用户体验，破坏了MVC架构：</p>
+<ol>
+<li>用Router代替了Controller</li>
+<li>View层可以直接从Model获取数据</li>
+<li>Model不再是一个单一的源</li>
+<li>应用状态甚至被放置在View层</li>
+</ol>
+<p>下面是Facebook开发者大会中展示的前端MVC在现实中的混乱，凸显了复杂应用的难以维护<br><img src="../flux-react-mvc.png"></p>
+<h2 id="Flux"><a href="#Flux" class="headerlink" title="Flux"></a>Flux</h2><p>为了更好的管理应用状态，Facebook提出了Flux架构。Flux最大的特点是数据的单向流动，控制了数据流向可以让应用状态更加可预测，方便除错和测试。<br><img src="../flux-simple-f8-diagram-explained-1300w.png"><br>图上View实际中就是React，而Dispatcher是Flux的核心，以前分散在各个组件中的逻辑代码被统一在Dispatcher中处理，所有应用状态的修改都要通过发送Action到Dispatcher处理后分发给Store，一定程度上起到了Controller层的作用。Flux中的Store就是Model，但是在Flux中Store并不唯一。</p>
+<h2 id="Redux"><a href="#Redux" class="headerlink" title="Redux"></a>Redux</h2><p>Flux实际应用中因为大量的boilerplate code而遭到批评，作为其简化版的实现Redux应运而生。<br>受到<a href="http://elm-lang.org/" target="_blank" rel="noopener">elm</a>的启发，Redux设计核心主要包括3点</p>
+<ol>
+<li><p>单一数据源：只有一个Store，以对象树的形式存储整个应用的状态。</p>
+</li>
+<li><p>状态是只读的：改变状态只能通过发送Action，Action是描述事件的普通对象</p>
+</li>
+<li><p>变化由纯函数Reducer完成：Reducer描述了Action如何改变状态。</p>
+</li>
+</ol>
+<p>Redux去除了Dispatcher，转由Reducer处理Action。这个过程可以表述为(previousState, action) =&gt; newState，由于是纯函数，Reducer可以方便的组合起来。但是Reducer中不允许任何副作用，没有异步，没有变量修改，只单纯执行计算。</p>
+<h4 id="Thunk"><a href="#Thunk" class="headerlink" title="Thunk"></a>Thunk</h4><p>Redux参考了connect/koa的中间件机制，其本身仅作为应用状态的容器，很多其他的功能由各式各样的中间件完成。<br>比如Redux的Store只支持同步的数据流，然而现实中处理异步是非常重要的，因此有很多中间件专注于解决这个问题。redux-thunk是其中常见的一个，也是Redux原作者的作品，概念和代码都非常简单直白，其核心代码仅10余行：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createThunkMiddleware</span>(<span class="params">extraArgument</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function">(<span class="params">&#123; dispatch, getState &#125;</span>) =&gt;</span> next =&gt; <span class="function"><span class="params">action</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> action === <span class="string">'function'</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> action(dispatch, getState, extraArgument);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> next(action);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> thunk = createThunkMiddleware();</span><br><span class="line">thunk.withExtraArgument = createThunkMiddleware;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> thunk;</span><br></pre></td></tr></table></figure>
+<p>Redux只支持action creator返回一个action，即一个普通对象，而thunk中间件会拦截并判断action是否是function类型，如果是则执行函数，副作用会在这里处理。这种返回thunk函数，带有副作用的thunk action creator实际上对store的dispatch()做了一层包装，推迟了dispatch()的执行，这就是thunk函数的本意。</p>
+<blockquote>
+<p>In computer programming, a thunk is a subroutine used to inject an additional calculation into another subroutine. Thunks are primarily used to delay a calculation until it is needed, or to insert operations at the beginning or end of the other subroutine. They have a variety of other applications to compiler code generation and in modular programming.</p>
+</blockquote>
+<p>BTW：Thunk函数和HOF（高阶函数）是不同的概念：HOF是将函数作为参数或返回一个函数 ，Thunk是一个为了延迟表达式求值而将其包裹起来的函数，它是传名调用的一种实现策略。</p>
+<h4 id="Saga"><a href="#Saga" class="headerlink" title="Saga"></a>Saga</h4><p>另一个处理Redux中副作用的方案是redux-saga。Saga是一个借用来的概念：</p>
+<blockquote>
+<p>The term saga is commonly used in discussions of CQRS to refer to a piece of code that coordinates and routes messages between bounded contexts and aggregates</p>
+</blockquote>
+<p>抛开艰深的概念，实践中Saga的内容就是Generator function，由Worker和Watcher组成。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; takeLatest &#125; <span class="keyword">from</span> <span class="string">"redux-saga"</span>  </span><br><span class="line"><span class="keyword">import</span> &#123; call, put &#125; <span class="keyword">from</span> <span class="string">"redux-saga/effects"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Worker，利用Generator函数完成异步处理</span></span><br><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">fetchBooks</span>(<span class="params">path</span>) </span>&#123;  </span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> data = <span class="keyword">yield</span> call(fetch, path);</span><br><span class="line">        <span class="keyword">yield</span> put(&#123;<span class="attr">type</span>: <span class="string">"RECEIVE_BOOKS"</span>, data &#125;);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">        <span class="keyword">yield</span> put(&#123;<span class="attr">type</span>: <span class="string">"FETCH_FAILED"</span>, <span class="attr">message</span>: e.message&#125;);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Watcher，监听FETCH_BOOKS的action并调用fetchBooks。</span></span><br><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">fetchSaga</span>(<span class="params"></span>) </span>&#123;  </span><br><span class="line">    <span class="keyword">yield</span>* takeLatest(<span class="string">"FETCH_BOOKS"</span>, fetchBooks); <span class="comment">// takeLatest意为如果有多个action重复发送，只执行最后一个。</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> fetchSaga;</span><br></pre></td></tr></table></figure>
+<p>redux-saga不用dispatch(actionCreator)，而是dispatch(action)，副作用在saga中处理，除此之外：</p>
+<ul>
+<li><p>saga更容易测试，简单的将模拟数据注入saga迭代器，调用next()检查结果，不需要像thunk那样mock state。</p>
+</li>
+<li><p>saga有很多helper function，比如cancel，takeEvery，takeLatest，throttle，race等。提供了更强大的控制能力。</p>
+</li>
+<li><p>提供channel机制支持外部事件。</p>
+</li>
+</ul>
+<p>相应的，redux-saga引入了Effect, Task, Worker, Watcher等概念，相对于thunk简单直白的概念，复杂度有一定的提升。</p>
+<h4 id="Duck-Pattern"><a href="#Duck-Pattern" class="headerlink" title="Duck Pattern"></a>Duck Pattern</h4><p>在Redux下写一个case时你需要写actionType，actions，reducers并分布在不同的文件中，不同的文件夹中。然而在大多数情况下只有一个reducer需要与之相关的action。因此有人提出了Redux Duck Pattern，将actions, reducers放在了一个文件中，提高模块的内聚性，从而可以方便的打包成库。比起按层划分，按功能划分有时可以使项目更加整洁。</p>
+<h2 id="Mobx"><a href="#Mobx" class="headerlink" title="Mobx"></a>Mobx</h2><p>回到开始时前端的诉求：UI对于状态改变的即时反应。因此现代的前端框架都在走向数据绑定。Mobx受到一些流行的MVVM框架的启发，通过透明的函数响应式编程（transparently applying functional reactive programming），使状态管理变得简单和可扩展。它的哲学是：任何源自应用状态的东西都能自动获得。<br><img src="../mobx.png"></p>
+<p>Mobx核心概念包括：</p>
+<ol>
+<li><p>State：应用状态，Mobx中的state被@observable修饰（一个extendObservable()的语法糖），使Mobx可以追踪并响应数据的变化。</p>
+</li>
+<li><p>Derivations：任何由原状态产生并不再有进一步交互作用事物称为Derivations，分两种类型：</p>
+<ul>
+<li>Computed values：从当前状态由纯函数计算产生的值</li>
+<li>Reactions：是应用状态改变必须产生的副作用，它是声明式编程和函数式编程的桥梁。</li>
+</ul>
+</li>
+<li><p>Action：改变应用状态的代码。Mobx在strict mode下确保Action以外没有办法改变状态，从而保证数据的单向流动。</p>
+</li>
+</ol>
+<p>Mobx的Store不要求统一的状态树，也不要求纯对象，不用花精力去设计一个公共状态结构，也不把数据和相应操作分开，更像一个完整的Modal：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ObservableTodoStore</span> </span>&#123;</span><br><span class="line">    @observable todos = [];</span><br><span class="line"></span><br><span class="line">    @computed get completedTodosCount() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.todos.filter(</span><br><span class="line">            todo =&gt; todo.completed === <span class="literal">true</span></span><br><span class="line">        ).length;</span><br><span class="line">    &#125;</span><br><span class="line">​</span><br><span class="line">    @action addTodo(task) &#123;</span><br><span class="line">        <span class="keyword">this</span>.todos.push(&#123;</span><br><span class="line">            task: task,</span><br><span class="line">            completed: <span class="literal">false</span>,</span><br><span class="line">            assignee: <span class="literal">null</span></span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">​</span><br><span class="line"><span class="keyword">const</span> observableTodoStore = <span class="keyword">new</span> ObservableTodoStore();</span><br></pre></td></tr></table></figure>
+<p>尽管Mobx自己只是库而不是框架。但是当你引入了Mobx后，代码组织结构的变化很明显：Mobx改变了应用状态和React组件的同步机制。但是Mobx社区中并没有所谓的最佳实践，也是Mobx应用不广泛的原因之一。</p>
+<h2 id="Vuex"><a href="#Vuex" class="headerlink" title="Vuex"></a>Vuex</h2><p>上面谈到的架构或库，虽然并不与前端框架绑定，但都是React生态环境的一部分。接下来不妨看一下另一个备受瞩目的前端框架Vue官方的状态管理解决方案Vuex。<br>Vuex借鉴了Flux、Redux，同样有一个全局的store，只能通过提交mutation改变状态。mutation包括一个事件类型和一个回调函数，但必须是同步函数。异步函数写在action里，action负责提交mutation。可以发现mutation实际相当于redux中的action creator，而action相当于thunk action creator。Vuex还允许store分割成Module，每个Module都拥有自己的state、mutation、action。<br><img src="../vuex.png"><br>Vuex的项目结构和Mobx比较像，actions，mutations和state共同组成了store。</p>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>对于应用状态管理的技术选型很大程度上决定了前端项目的整体架构，因此在选择时应该根据实际需求做适合的选择。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://facebook.github.io/flux/docs/in-depth-overview.html#content" target="_blank" rel="noopener">https://facebook.github.io/flux/docs/in-depth-overview.html#content</a><br><a href="https://redux.js.org/docs/introduction/PriorArt.html" target="_blank" rel="noopener">https://redux.js.org/docs/introduction/PriorArt.html</a><br><a href="https://cn.vuejs.org/v2/guide/state-management.html" target="_blank" rel="noopener">https://cn.vuejs.org/v2/guide/state-management.html</a><br><a href="http://cn.mobx.js.org/intro/concepts.html" target="_blank" rel="noopener">http://cn.mobx.js.org/intro/concepts.html</a><br><a href="https://github.com/erikras/ducks-modular-redux" target="_blank" rel="noopener">https://github.com/erikras/ducks-modular-redux</a><br><a href="https://medium.com/@mweststrate/becoming-fully-reactive-an-in-depth-explanation-of-mobservable-55995262a254" target="_blank" rel="noopener">https://medium.com/@mweststrate/becoming-fully-reactive-an-in-depth-explanation-of-mobservable-55995262a254</a><br><a href="http://www.christianalfoni.com/articles/2015_08_02_Why-we-are-doing-MVC-and-FLUX-wrong" target="_blank" rel="noopener">http://www.christianalfoni.com/articles/2015_08_02_Why-we-are-doing-MVC-and-FLUX-wrong</a><br><a href="https://medium.com/mofed/react-redux-architecture-overview-7b3e52004b6e" target="_blank" rel="noopener">https://medium.com/mofed/react-redux-architecture-overview-7b3e52004b6e</a><br><a href="https://medium.com/javascript-scene/10-tips-for-better-redux-architecture-69250425af44" target="_blank" rel="noopener">https://medium.com/javascript-scene/10-tips-for-better-redux-architecture-69250425af44</a><br><a href="https://becoming-functional.com/redux-from-an-elm-perspective-5cb365babaeb" target="_blank" rel="noopener">https://becoming-functional.com/redux-from-an-elm-perspective-5cb365babaeb</a><br><a href="https://juejin.im/entry/594b60c6fe88c2005f6a3585" target="_blank" rel="noopener">https://juejin.im/entry/594b60c6fe88c2005f6a3585</a><br><a href="https://www.jianshu.com/p/a52e896f8c8f" target="_blank" rel="noopener">https://www.jianshu.com/p/a52e896f8c8f</a><br><a href="http://conal.net/papers/icfp97/" target="_blank" rel="noopener">http://conal.net/papers/icfp97/</a><br><a href="http://bobkonf.de/2016/apfelmus.html" target="_blank" rel="noopener">http://bobkonf.de/2016/apfelmus.html</a></p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Redux" >
+    <span class="tag-code">Redux</span>
+  </a>
+
+  <a href="/tags#MobX" >
+    <span class="tag-code">MobX</span>
+  </a>
+
+  <a href="/tags#Vuex" >
+    <span class="tag-code">Vuex</span>
+  </a>
+
+  <a href="/tags#TFRP" >
+    <span class="tag-code">TFRP</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <br/>
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Flux"><span class="toc-nav-text"><a href="#Flux" class="headerlink" title="Flux"></a>Flux</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Redux"><span class="toc-nav-text"><a href="#Redux" class="headerlink" title="Redux"></a>Redux</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Thunk"><span class="toc-nav-text"><a href="#Thunk" class="headerlink" title="Thunk"></a>Thunk</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Saga"><span class="toc-nav-text"><a href="#Saga" class="headerlink" title="Saga"></a>Saga</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Duck-Pattern"><span class="toc-nav-text"><a href="#Duck-Pattern" class="headerlink" title="Duck Pattern"></a>Duck Pattern</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Mobx"><span class="toc-nav-text"><a href="#Mobx" class="headerlink" title="Mobx"></a>Mobx</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Vuex"><span class="toc-nav-text"><a href="#Vuex" class="headerlink" title="Vuex"></a>Vuex</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Summary"><span class="toc-nav-text"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Reference"><span class="toc-nav-text"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://yoursite.com/2017/11/20/frontend-architecture/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+        
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "initialdyc";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "前端应用状态管理和数据流控制",
+        owner: "initialdyc",
+        repo: "initialdyc.github.io",
+        oauth: {
+          client_id: "",
+          client_secret: ""
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2018 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by yanm1ng
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="/js/script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="Make Blog Great Again">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      设计模式的透明化：Akarin’s Perspective | Weblog
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+</head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Weblog</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>设计模式的透明化：Akarin’s Perspective</h2>
+  <p class="post-date">2017-07-06</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>设计模式是对软件工程中普遍存在，反复出现的问题提出的可复用式的解决方案。这个术语最早在70年代末的建筑设计领域出现，但是却意外的在软件开发领域迅速流行。起因便是GoF（Erich Gamma等4人）编著的《设计模式》一书，共总结了23种设计模式，相应的还有6个设计原则。我们经常能听到关于企业级OO和过度设计的批评，这些先按下不表。理论上来说，设计模式/原则与具体语言和实现无关，而实际上这些设计模式是以C++、Java这些有统治地位的语言为背景的。使用者的思维方式又会受到语言的影响，设计模式的实现方式及简单与否都与之有关系，极端的情况下某些设计模式变成了显而易见的特性：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/*  </span></span><br><span class="line"><span class="comment">    下面以单例模式为例：</span></span><br><span class="line"><span class="comment">    作为最基本的设计模式，Java中单例写法却有很多种</span></span><br><span class="line"><span class="comment">    下面为Double-checked locking模式，一种旨在减少同步锁开销的惰性单例写法</span></span><br><span class="line"><span class="comment">    然而在Java 1.4及之前的版本被发现了漏洞</span></span><br><span class="line"><span class="comment">    1.5中专门为此修改了volatile的语义解决这个问题</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> Singleton instance;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">synchronized</span>(Singleton.class) &#123;</span><br><span class="line">                <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment">    旧版Effective Java中的Initialization-on-demand holder模式</span></span><br><span class="line"><span class="comment">    利用初始化锁LC保证线程安全</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">LazyHolder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">final</span> Singleton INSTANCE = <span class="keyword">new</span> Singleton();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> LazyHolder.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    新版Effective Java中，推荐用枚举来写单例。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Singleton &#123;</span><br><span class="line">    INSTANCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>经过艰苦卓绝的奋斗，人们终于总结出Java中优雅的单例写法。<br>而在Scala和Kotlin中，object关键字的作用之一就是创建单例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">object Singleton &#123;</span><br><span class="line">&#125;</span><br><span class="line">// 完</span><br></pre></td></tr></table></figure>
+<p>类似的例子还有装饰模式和Python的装饰器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/*  </span></span><br><span class="line"><span class="comment">    Java中的装饰者模式主要是利用多态，将子类对象作为参数传递</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ISubject</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">action</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BasicSubject</span> <span class="keyword">implements</span> <span class="title">ISubject</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">action</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"action!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">SubjectDecorator</span> <span class="keyword">implements</span> <span class="title">ISubject</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> ISubject subject;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SubjectDecorator</span> <span class="params">(ISubject subject)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.subject = subject;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">action</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        subject.action();</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SubjectTimerDecorator</span> <span class="keyword">implements</span> <span class="title">ISubject</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ISubject subject;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SubjectTimerDecorator</span><span class="params">(ISubject subject)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.subject = subject;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">action</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        timer();</span><br><span class="line">        subject.action();</span><br><span class="line">        timer();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">timer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(System.currentTimeMillis())</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DecoratorClient</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ISubject subject = <span class="keyword">new</span> BasicSubject();</span><br><span class="line">        ISubject decorator = <span class="keyword">new</span> SubjectTimerDecorator(subject);</span><br><span class="line">        decorator.action();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">由于可以自由的传递函数</span></span><br><span class="line"><span class="string">python中的装饰器模式本来就不需要接口和继承</span></span><br><span class="line"><span class="string">再加入装饰器的语法糖后就更加简单了</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">timer</span><span class="params">(func)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wraper</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">        before = time()</span><br><span class="line">        result = func(*args, **kwargs)</span><br><span class="line">        after = time()</span><br><span class="line">        print(<span class="string">"elapsed: "</span>, after - before)</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    <span class="keyword">return</span> wraper</span><br><span class="line">    </span><br><span class="line"><span class="meta">@timer</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span><span class="params">(x, y = <span class="number">10</span>)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> x + y</span><br><span class="line"></span><br><span class="line"><span class="comment"># 相当于</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span><span class="params">(x, y = <span class="number">10</span>)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> x + y</span><br><span class="line">add = timer(add)</span><br></pre></td></tr></table></figure>
+<h2 id="First-class-function"><a href="#First-class-function" class="headerlink" title="First-class function"></a>First-class function</h2><p>函数式编程语言有一个重要特性叫做First-class function, 意思是指函数是编程语言的第一类公民(first-class citizen)。这意味着函数可以作为别的函数的参数、返回值，赋值给变量或存储在数据结构中。而这个特性会让很多设计模式显得很啰嗦甚至多余。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 下面是一个典型的策略模式代码</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//___WIKIPEDIA CODE STARTS___</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Strategy</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">execute</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span>; </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Implements the algorithm using the strategy interface */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Add</span> <span class="keyword">implements</span> <span class="title">Strategy</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">execute</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Called Add's execute()"</span>);</span><br><span class="line">        <span class="keyword">return</span> a + b;  <span class="comment">// Do an addition with a and b</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Subtract</span> <span class="keyword">implements</span> <span class="title">Strategy</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">execute</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Called Subtract's execute()"</span>);</span><br><span class="line">        <span class="keyword">return</span> a - b;  <span class="comment">// Do a subtraction with a and b</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Multiply</span> <span class="keyword">implements</span> <span class="title">Strategy</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">execute</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Called Multiply's execute()"</span>);</span><br><span class="line">        <span class="keyword">return</span> a * b;   <span class="comment">// Do a multiplication with a and b</span></span><br><span class="line">    &#125;    </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Configured with a ConcreteStrategy object and maintains</span></span><br><span class="line"><span class="comment">// a reference to a Strategy object </span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Context</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Strategy strategy;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Context</span><span class="params">(Strategy strategy)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.strategy = strategy;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">executeStrategy</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.strategy.execute(a, b);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Tests the pattern */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StrategyExample</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Context context;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Three contexts following different strategies</span></span><br><span class="line">        context = <span class="keyword">new</span> Context(<span class="keyword">new</span> Add());</span><br><span class="line">        <span class="keyword">int</span> resultA = context.executeStrategy(<span class="number">3</span>,<span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">        context = <span class="keyword">new</span> Context(<span class="keyword">new</span> Subtract());</span><br><span class="line">        <span class="keyword">int</span> resultB = context.executeStrategy(<span class="number">3</span>,<span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">        context = <span class="keyword">new</span> Context(<span class="keyword">new</span> Multiply());</span><br><span class="line">        <span class="keyword">int</span> resultC = context.executeStrategy(<span class="number">3</span>,<span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"Result A : "</span> + resultA );</span><br><span class="line">        System.out.println(<span class="string">"Result B : "</span> + resultB );</span><br><span class="line">        System.out.println(<span class="string">"Result C : "</span> + resultC );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//___WIKIPEDIA CODE ENDS___</span></span><br></pre></td></tr></table></figure>
+<p>策略模式的概念相对而言是比较简单的，但是已经可以看到大量的boilplate code了。</p>
+<p>下面是scala的等价写法：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">DeathToStrategy</span> <span class="keyword">extends</span> <span class="title">App</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add</span></span>(a: <span class="type">Int</span>, b: <span class="type">Int</span>) = a + b</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">subtract</span></span>(a: <span class="type">Int</span>, b: <span class="type">Int</span>) = a - b</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">multiply</span></span>(a: <span class="type">Int</span>, b: <span class="type">Int</span>) = a * b</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">execute</span></span>(callback:(<span class="type">Int</span>, <span class="type">Int</span>) =&gt; <span class="type">Int</span>, x: <span class="type">Int</span>, y: <span class="type">Int</span>) = callback(x, y)</span><br><span class="line"></span><br><span class="line">    println(<span class="string">"Add:      "</span> + execute(add, <span class="number">3</span>, <span class="number">4</span>))</span><br><span class="line">    println(<span class="string">"Subtract: "</span> + execute(subtract, <span class="number">3</span>, <span class="number">4</span>))</span><br><span class="line">    println(<span class="string">"Multiply: "</span> + execute(multiply, <span class="number">3</span>, <span class="number">4</span>))</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>策略模式可以看作命令模式的一个特例，而策略模式和模版模式都是在包装算法，只不过一个是组合，一个是继承。在经典设计模式中有很多这种重复的例子，比如代理和装饰器，桥接和适配器和外观模式，有很多神似的地方。</p>
+<h2 id="Pattern-Matching"><a href="#Pattern-Matching" class="headerlink" title="Pattern Matching"></a>Pattern Matching</h2><p>模式匹配是函数式语言中非常强大的功能，在Scala/Kotlin中看起来和Java的switch case很像，但是除了可以对值进行匹配外，还可以对类型匹配，对case class匹配，配合提取器可以匹配任何模式。强大的模式匹配让访问者模式变得没有意义。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Expr</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; <span class="function">T <span class="title">accept</span><span class="params">(ExprVisitor&lt;T&gt; visitor)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> visitor.visit(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Num</span> <span class="keyword">extends</span> <span class="title">Expr</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> value;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Num</span><span class="params">(<span class="keyword">int</span> value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.value = value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> value;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">BiCompositeExpr</span> <span class="keyword">extends</span> <span class="title">Expr</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Expr left;</span><br><span class="line">    <span class="keyword">private</span> Expr right;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">BiCompositeExpr</span><span class="params">(Expr left, Expr right)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.left = left;</span><br><span class="line">        <span class="keyword">this</span>.right = right;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Expr <span class="title">getLeft</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> left;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Expr <span class="title">getRight</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> right;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sum</span> <span class="keyword">extends</span> <span class="title">BiCompositeExpr</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">Sum</span><span class="params">(Expr left, Expr right)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(left, right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Prod</span> <span class="keyword">extends</span> <span class="title">BiCompositeExpr</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">Prod</span><span class="params">(Expr left, Expr right)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(left, right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">ExprVisitor</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">T <span class="title">visit</span><span class="params">(Num num)</span></span>;</span><br><span class="line">    <span class="function">T <span class="title">visit</span><span class="params">(Sum sum)</span></span>;</span><br><span class="line">    <span class="function">T <span class="title">visit</span><span class="params">(Prod prod)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EvalExpr</span> <span class="keyword">implements</span> <span class="title">ExprVisitor</span>&lt;<span class="title">Integer</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">visit</span><span class="params">(Num num)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> num.getValue();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">visit</span><span class="params">(Sum sum)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> sum.getLeft().accept(<span class="keyword">this</span>) + sum.getRight().accept(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">visit</span><span class="params">(Prod prod)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> prod.getLeft().accept(<span class="keyword">this</span>) * prod.getRight().accept(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PrintExpr</span> <span class="keyword">implements</span> <span class="title">ExprVisitor</span>&lt;<span class="title">Void</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Void <span class="title">visit</span><span class="params">(Num num)</span> </span>&#123;</span><br><span class="line">        print(<span class="string">" "</span> + num.getValue() + <span class="string">" "</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Void <span class="title">visit</span><span class="params">(Sum sum)</span> </span>&#123;</span><br><span class="line">        sum.getLeft().accept(<span class="keyword">this</span>);</span><br><span class="line">        print(<span class="string">"+"</span>);</span><br><span class="line">        sum.getRight().accept(<span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Void <span class="title">visit</span><span class="params">(Prod prod)</span> </span>&#123;</span><br><span class="line">        prod.getLeft().accept(<span class="keyword">this</span>);</span><br><span class="line">        print(<span class="string">"*"</span>);</span><br><span class="line">        prod.getRight().accept(<span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>scala等价代码如下：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Expr</span></span></span><br><span class="line"><span class="class"><span class="title">case</span> <span class="title">class</span> <span class="title">Num</span>(<span class="params">n: <span class="type">Int</span></span>) <span class="keyword">extends</span> <span class="title">Expr</span></span></span><br><span class="line"><span class="class"><span class="title">case</span> <span class="title">class</span> <span class="title">Sum</span>(<span class="params">l: <span class="type">Expr</span>, r: <span class="type">Expr</span></span>) <span class="keyword">extends</span> <span class="title">Expr</span></span></span><br><span class="line"><span class="class"><span class="title">case</span> <span class="title">class</span> <span class="title">Prod</span>(<span class="params">l: <span class="type">Expr</span>, r: <span class="type">Expr</span></span>) <span class="keyword">extends</span> <span class="title">Expr</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">def</span> <span class="title">evalExpr</span>(<span class="params">e: <span class="type">Expr</span></span>)</span>: <span class="type">Int</span> = e <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">Num</span>(n) =&gt; n</span><br><span class="line">    <span class="keyword">case</span> <span class="type">Sum</span>(l, r) =&gt; evalExpr(l) + evalExpr(r)</span><br><span class="line">    <span class="keyword">case</span> <span class="type">Prod</span>(l, r) =&gt; evalExpr(l) * evalExpr(r)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">printExpr</span></span>(e: <span class="type">Expr</span>) = e <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">Num</span>(n) =&gt; print(<span class="string">" "</span> + n + <span class="string">" "</span>)</span><br><span class="line">    <span class="keyword">case</span> <span class="type">Sum</span>(l, r) =&gt; printExpr(l); print(<span class="string">"+"</span>); printExpr(r)</span><br><span class="line">    <span class="keyword">case</span> <span class="type">Prod</span>(l, r) =&gt; printExpr(l); print(<span class="string">"x"</span>); printExpr(r)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了方便比较我们没有用Scala强大的运算符重载，否则又是另一个故事了。<br>事实上，访问者模式可以看作模式匹配的一个特例：只匹配了方法的参数类型。</p>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>随着现代编程语言越来越多借鉴函数式语言，以往繁杂的设计模式将会消失或透明化，但是其中有一些重要的思想仍然值得借鉴和学习。<br><del>关于其他模式的比较，将择日更新</del></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="http://blog.plover.com/prog/design-patterns.html" target="_blank" rel="noopener">Design patterns of 1972</a><br><a href="http://norvig.com/design-patterns/" target="_blank" rel="noopener">Design Patterns in Dynamic Languages</a><br><a href="https://mitpress.mit.edu/books/little-java-few-patterns" target="_blank" rel="noopener">A Little Java, A Few Patterns</a><br><a href="https://www.scala-lang.org/old/sites/default/files/FrederikThesis.pdf" target="_blank" rel="noopener">Scala &amp; Design Patterns</a></p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Functional programming" >
+    <span class="tag-code">Functional programming</span>
+  </a>
+
+  <a href="/tags#Design pattern/principle" >
+    <span class="tag-code">Design pattern/principle</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <br/>
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">Catalog</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#First-class-function"><span class="toc-nav-text"><a href="#First-class-function" class="headerlink" title="First-class function"></a>First-class function</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Pattern-Matching"><span class="toc-nav-text"><a href="#Pattern-Matching" class="headerlink" title="Pattern Matching"></a>Pattern Matching</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Summary"><span class="toc-nav-text"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Reference"><span class="toc-nav-text"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://yoursite.com/2017/07/06/design-pattern/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+        
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "initialdyc";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "设计模式的透明化：Akarin’s Perspective",
+        owner: "initialdyc",
+        repo: "initialdyc.github.io",
+        oauth: {
+          client_id: "",
+          client_secret: ""
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2018 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by yanm1ng
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="/js/script.js"></script>
+  </body>
+</html>
